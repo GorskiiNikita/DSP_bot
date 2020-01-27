@@ -26,4 +26,5 @@ urlpatterns = [
 ]
 
 
+# Назначаем адрес для хуков телеграма
 invoke_telegram('setWebhook', url=f'{ENDPOINT_URL}/api/telegram_hook/')

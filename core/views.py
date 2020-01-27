@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 
 from core.telegram_api import invoke_telegram, download_file
+from core.utils import write_audio_file
 
 
 @csrf_exempt
@@ -13,9 +14,11 @@ def telegram_hook(request):
     message = update.get('message')
 
     if message is not None and 'voice' in message.keys():
+        user_id = message['from']['id']
         file_id = message['voice']['file_id']
         file_path = get_telegram_file_path(file_id)
         voice_message = download_file(file_path)
+        write_audio_file(voice_message, user_id)
 
     invoke_telegram('sendMessage', chat_id=update['message']['chat']['id'], text='OK')
 

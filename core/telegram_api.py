@@ -9,9 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 def invoke_telegram(method, **kwargs):
-    url = f"{URL}/bot{settings.TELEGRAM_BOT_TOKEN}/{method}"
-    resp = requests.post(url, data=kwargs, timeout=(3.05, 27), proxies=settings.PROXY)
-    logger.info("Response %s %s" % (resp, resp.content))
+    resp = requests.post(f'{URL}/bot{settings.TELEGRAM_BOT_TOKEN}/{method}', data=kwargs, proxies=settings.PROXY)
+    logger.info('Response %s %s' % (resp, resp.content))
     return resp
 
 
