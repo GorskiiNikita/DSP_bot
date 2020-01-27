@@ -2,7 +2,7 @@ import os
 
 
 def get_number_file(path):
-    return len(os.listdir(f'{path}/oga'))
+    return len(os.listdir(path))
 
 
 def make_dirs(path):
@@ -18,7 +18,7 @@ def write_audio_file(file, user_id):
     make_dirs(f'{path}/oga')
     make_dirs(f'{path}/wav')
 
-    number = get_number_file(path)
+    number = get_number_file(f'{path}/oga')
 
-    with open(f'media/audio/{user_id}/oga/audio_message_{number}', 'wb') as f:
+    with open(f'{path}/oga/audio_message_{number}', 'wb') as f:
         f.write(file)
