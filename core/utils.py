@@ -16,7 +16,6 @@ def write_audio_file(file, user_id):
     path = f'media/audio/{user_id}'
 
     make_dirs(f'{path}/oga')
-    make_dirs(f'{path}/wav')
 
     number = get_number_file(f'{path}/oga')
 
