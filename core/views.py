@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 
 from core.telegram_api import invoke_telegram, download_file
-from core.utils import write_audio_file, convert_audio_file
+from core.utils import write_audio_file, convert_audio_file, found_faces_on_image, save_image
 
 
 @csrf_exempt
@@ -13,13 +13,25 @@ def telegram_hook(request):
     update = json.loads(request.body)
     message = update.get('message')
 
-    if message is not None and 'voice' in message.keys():
-        user_id = message['from']['id']
+    if message is None:
+        return HttpResponse('OK')
+
+    user_id = message['from']['id']
+
+    if 'voice' in message.keys():
         file_id = message['voice']['file_id']
         file_path = get_telegram_file_path(file_id)
         voice_message = download_file(file_path)
         file_src = write_audio_file(voice_message, user_id)
         convert_audio_file(file_src, user_id)
+
+    elif 'photo' in message.keys():
+        file_id = message['photo'][2]['file_id']
+        file_path = get_telegram_file_path(file_id)
+        img = download_file(file_path)
+        count_faces = found_faces_on_image(img)
+        if count_faces > 0:
+            save_image(img, user_id)
 
     invoke_telegram('sendMessage', chat_id=update['message']['chat']['id'], text='OK')
 
